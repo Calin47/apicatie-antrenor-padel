@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rezervă antrenament de padel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="banda">
+  <div class="banda-interior">
+    <p class="eticheta">Rezervă un antrenament</p>
+    <h1 id="antrenor">Antrenamente cu Călin</h1>
+    <p class="subtitlu" id="anunt">Alege ziua și ora care ți se potrivesc. Rezervarea apare imediat la antrenor.</p>
+  </div>
+</header>
+
+<main class="continut">
+  <section class="panou" aria-labelledby="titlu-zi">
+    <h2 id="titlu-zi">1. Alege ziua</h2>
+    <div class="zile" id="zile" role="group" aria-label="Zile"><p class="gol">Se încarcă programul…</p></div>
+  </section>
+
+  <section class="panou" aria-labelledby="titlu-ora">
+    <h2 id="titlu-ora">2. Alege ora</h2>
+    <div class="ore" id="ore"></div>
+    <p class="nota-mica" id="nota-durata"></p>
+  </section>
+
+  <section class="panou" id="sectiune-date" aria-labelledby="titlu-date" hidden>
+    <h2 id="titlu-date">3. Datele tale</h2>
+    <div class="rezumat-alegere"><strong id="alegere-text"></strong><span id="alegere-durata"></span></div>
+    <form id="formular" novalidate>
+      <label>Nume și prenume
+        <input id="nume" name="nume" autocomplete="name" required maxlength="80">
+      </label>
+      <label>Telefon
+        <input id="telefon" name="telefon" type="tel" autocomplete="tel" inputmode="tel" required maxlength="30" placeholder="07xx xxx xxx">
+      </label>
+      <fieldset class="grup">
+        <legend>Câte persoane vin</legend>
+        <div class="segmente" id="persoane">
+          <input type="radio" name="persoane" id="pers-1" value="1" checked><label for="pers-1">1<small>individual</small></label>
+          <input type="radio" name="persoane" id="pers-2" value="2"><label for="pers-2">2<small>în doi</small></label>
+          <input type="radio" name="persoane" id="pers-3" value="3"><label for="pers-3">3<small>grup</small></label>
+          <input type="radio" name="persoane" id="pers-4" value="4"><label for="pers-4">4<small>teren plin</small></label>
+        </div>
+      </fieldset>
+      <fieldset class="grup">
+        <legend>Ce vrei să exersezi <span class="optional">(opțional, alege oricâte)</span></legend>
+        <div class="etichete" id="exercitii"></div>
+      </fieldset>
+      <label>Mesaj pentru antrenor <span class="optional">(opțional)</span>
+        <textarea id="nota" name="nota" maxlength="300" placeholder="Ex: sunt începător, am nevoie de rachetă, vreau să lucrez la rever"></textarea>
+      </label>
+      <p class="eroare" id="eroare" hidden></p>
+      <button class="buton" id="trimite" type="submit">Rezervă ora</button>
+    </form>
+  </section>
+
+  <section class="panou confirmare" id="confirmare" hidden aria-live="polite">
+    <div class="bifa" aria-hidden="true">✓</div>
+    <h2>Rezervare făcută</h2>
+    <p id="confirmare-text"></p>
+    <p class="nota-mica">Dacă nu mai poți ajunge, anunță antrenorul cât mai repede, ca să poată da ora altcuiva.</p>
+    <div><button class="buton secundar" id="alta" type="button">Rezervă altă oră</button></div>
+  </section>
+</main>
+<script src="/client.js"></script>
+</body>
+</html>

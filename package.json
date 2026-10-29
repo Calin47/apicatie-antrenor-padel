@@ -1,0 +1,12 @@
+{
+  "name": "padel-rezervari",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Calendar de rezervari pentru antrenamente de padel",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "dev": "node --watch server.mjs",
+    "start": "node server.mjs"
+  }
+}

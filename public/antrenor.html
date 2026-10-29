@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Panou antrenor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Figtree:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/antrenor.css">
+</head>
+<body>
+<header class="banda">
+  <div class="banda-interior">
+    <p class="eticheta">Panou antrenor</p>
+    <h1 id="titlu">Antrenamentele mele</h1>
+  </div>
+</header>
+
+<main class="continut">
+  <section class="panou" id="login" hidden>
+    <h2>Intră în panou</h2>
+    <form id="form-login">
+      <label>Parola
+        <input id="parola" type="password" autocomplete="current-password" required>
+      </label>
+      <p class="eroare" id="eroare-login" hidden></p>
+      <button class="buton" type="submit">Intră</button>
+    </form>
+  </section>
+
+  <div id="panou" hidden class="grila-panou">
+    <section class="cifre" aria-label="Pe scurt">
+      <div class="cifra"><span class="valoare" id="c-azi">0</span><span class="cifra-eticheta">azi</span></div>
+      <div class="cifra"><span class="valoare" id="c-maine">0</span><span class="cifra-eticheta">mâine</span></div>
+      <div class="cifra"><span class="valoare" id="c-sapt">0</span><span class="cifra-eticheta">săptămâna asta</span></div>
+      <div class="cifra"><span class="valoare" id="c-luna">0</span><span class="cifra-eticheta">luna asta</span></div>
+    </section>
+
+    <section class="panou link-clienti">
+      <div class="link-text">
+        <p class="eticheta">Linkul pentru clienți</p>
+        <code id="link"></code>
+      </div>
+      <button class="buton mic" id="copiaza" type="button">Copiază linkul</button>
+    </section>
+
+    <nav class="file" role="tablist" aria-label="Secțiuni">
+      <button role="tab" id="tab-rezervari" aria-selected="true" aria-controls="sec-rezervari">Rezervări</button>
+      <button role="tab" id="tab-admin" aria-selected="false" aria-controls="sec-admin">Toate rezervările</button>
+      <button role="tab" id="tab-program" aria-selected="false" aria-controls="sec-program">Program</button>
+      <button role="tab" id="tab-libere" aria-selected="false" aria-controls="sec-libere">Zile libere</button>
+    </nav>
+
+    <section class="panou" id="sec-rezervari" role="tabpanel" aria-labelledby="tab-rezervari">
+      <div class="navigare-sapt">
+        <button class="buton secundar mic" id="sapt-inapoi" type="button" aria-label="Săptămâna trecută">←</button>
+        <h2 id="sapt-titlu"></h2>
+        <button class="buton secundar mic" id="sapt-inainte" type="button" aria-label="Săptămâna viitoare">→</button>
+      </div>
+      <div id="lista-sapt" class="lista-sapt"></div>
+    </section>
+
+    <section class="panou" id="sec-admin" role="tabpanel" aria-labelledby="tab-admin" hidden>
+      <h2>Toate rezervările</h2>
+      <div class="cifre cifre-mici" id="admin-cifre"></div>
+      <div class="filtre">
+        <label class="cautare">Caută
+          <input id="cauta" type="search" placeholder="Nume sau telefon" autocomplete="off">
+        </label>
+        <label>Arată
+          <select id="filtru">
+            <option value="viitoare">Viitoare</option>
+            <option value="trecute">Trecute</option>
+            <option value="anulate">Anulate</option>
+            <option value="toate">Toate</option>
+          </select>
+        </label>
+      </div>
+      <div class="tabel-scroll">
+        <table class="tabel-rezervari">
+          <thead><tr><th scope="col">Data</th><th scope="col">Ora</th><th scope="col">Client</th><th scope="col">Pers.</th><th scope="col">Stare</th></tr></thead>
+          <tbody id="tabel-admin"></tbody>
+        </table>
+      </div>
+      <p class="nota-mica" id="admin-numar"></p>
+    </section>
+
+    <section class="panou" id="sec-program" role="tabpanel" aria-labelledby="tab-program" hidden>
+      <h2>Programul săptămânal</h2>
+      <p class="nota-mica">Bifează orele la care pot începe antrenamentele. Programul se repetă în fiecare săptămână. Rezervările deja făcute rămân valabile și dacă scoți o oră.</p>
+      <div class="grila-scroll">
+        <table class="grila-program" id="grila-program"></table>
+      </div>
+      <div class="setari">
+        <label>Numele afișat clienților
+          <input id="s-antrenor" maxlength="80">
+        </label>
+        <label>Durata unui antrenament
+          <select id="s-durata">
+            <option value="30">30 de minute</option>
+            <option value="45">45 de minute</option>
+            <option value="60">60 de minute</option>
+            <option value="90">90 de minute</option>
+            <option value="120">120 de minute</option>
+          </select>
+        </label>
+        <label>Cu câte zile înainte se poate rezerva
+          <input id="s-zile" type="number" min="1" max="60">
+        </label>
+        <label class="lat">Mesaj pentru clienți <span class="optional">(opțional, apare sus pe pagină)</span>
+          <textarea id="s-anunt" maxlength="300" placeholder="Ex: Antrenamentele se țin la Padel Arena, terenul 2."></textarea>
+        </label>
+      </div>
+      <div class="actiuni">
+        <button class="buton" id="salveaza-program" type="button">Salvează programul</button>
+        <span class="nota-mica" id="stare-program" aria-live="polite"></span>
+      </div>
+    </section>
+
+    <section class="panou" id="sec-libere" role="tabpanel" aria-labelledby="tab-libere" hidden>
+      <h2>Zile libere</h2>
+      <p class="nota-mica">În zilele adăugate aici clienții nu pot rezerva nimic, oricare ar fi programul.</p>
+      <form id="form-libera" class="rand-form">
+        <label>Ziua
+          <input id="data-libera" type="date" required>
+        </label>
+        <button class="buton" type="submit">Adaugă ziua liberă</button>
+      </form>
+      <ul class="lista-libere" id="lista-libere"></ul>
+    </section>
+
+    <div><button class="buton secundar mic" id="iesire" type="button">Ieși din panou</button></div>
+  </div>
+</main>
+<dialog id="detalii" aria-labelledby="d-titlu">
+  <div class="detalii-cap">
+    <div>
+      <p class="eticheta" id="d-cod"></p>
+      <h2 id="d-titlu"></h2>
+    </div>
+    <button class="buton secundar mic" id="d-inchide" type="button" aria-label="Închide">✕</button>
+  </div>
+  <span class="stare" id="d-stare"></span>
+  <dl class="detalii-lista" id="d-lista"></dl>
+  <div class="detalii-istoric">
+    <p class="eticheta">Istoricul clientului</p>
+    <p class="nota-mica" id="d-istoric-rezumat"></p>
+    <ul id="d-istoric"></ul>
+  </div>
+  <div class="actiuni" id="d-actiuni"></div>
+</dialog>
+<script src="/antrenor.js"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+.grila-panou { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+
+.cifre {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+@media (max-width: 520px) { .cifre { grid-template-columns: repeat(2, 1fr); } }
+.cifra {
+  background: var(--suprafata);
+  border: 1px solid var(--linie);
+  border-radius: var(--raza);
+  padding: 14px 16px;
+  display: grid;
+}
+.cifra .valoare { font-family: var(--font-titlu); font-size: 40px; font-weight: 700; line-height: 1; font-variant-numeric: tabular-nums; }
+.cifra-eticheta { font-size: 13px; color: var(--text-slab); }
+.cifra:first-child { background: var(--teren); border-color: var(--teren); color: var(--teren-text); }
+.cifra:first-child .cifra-eticheta { color: var(--teren-text); }
+
+.link-clienti { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.link-text { min-width: 0; }
+.link-text .eticheta { margin-bottom: 4px; }
+.link-clienti code { font-size: 15px; overflow-wrap: anywhere; user-select: all; }
+
+.file { display: flex; gap: 4px; border-bottom: 1px solid var(--linie); overflow-x: auto; }
+.file button {
+  background: none;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  padding: 10px 14px;
+  font-weight: 600;
+  color: var(--text-slab);
+  white-space: nowrap;
+}
+.file button[aria-selected="true"] { color: var(--text); border-bottom-color: var(--teren); }
+
+.navigare-sapt { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.navigare-sapt h2 { font-size: 20px; text-align: center; }
+
+.lista-sapt { display: grid; gap: 4px; }
+.zi-rand {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 12px;
+  padding: 12px 0;
+  border-top: 1px solid var(--linie);
+}
+.zi-rand:first-child { border-top: 0; }
+@media (max-width: 520px) { .zi-rand { grid-template-columns: 1fr; gap: 6px; } }
+.zi-rand.azi .zi-nume { color: var(--teren); }
+.zi-nume { font-weight: 700; display: grid; }
+.zi-nume small { font-weight: 500; color: var(--text-slab); font-size: 13px; }
+.zi-rezervari { display: grid; gap: 8px; min-width: 0; }
+.zi-goala { color: var(--text-slab); font-size: 14px; padding-top: 2px; }
+.rezervare {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 4px 14px;
+  align-items: start;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--bg);
+}
+.rezervare .r-ora { font-family: var(--font-titlu); font-size: 22px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.rezervare .r-ora small { display: block; font-family: var(--font-text); font-size: 12px; font-weight: 500; color: var(--text-slab); }
+.rezervare .r-cine { min-width: 0; overflow-wrap: anywhere; }
+.rezervare .r-nume { font-weight: 600; }
+.rezervare .r-tel { font-variant-numeric: tabular-nums; color: var(--teren); font-weight: 600; text-decoration: none; }
+.rezervare .r-nota { font-size: 14px; color: var(--text-slab); margin-top: 2px; }
+@media (max-width: 420px) {
+  .rezervare { grid-template-columns: auto 1fr; }
+  .rezervare .buton { grid-column: 1 / -1; justify-self: start; }
+}
+
+.grila-scroll { overflow-x: auto; }
+.grila-program { border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.grila-program th { font-size: 13px; font-weight: 600; color: var(--text-slab); padding: 4px; }
+.grila-program th[scope="row"] { text-align: right; padding-right: 10px; }
+.grila-program td { padding: 2px; }
+.grila-program input { position: absolute; opacity: 0; pointer-events: none; }
+.grila-program label {
+  display: block;
+  width: 44px; height: 28px;
+  border-radius: 6px;
+  background: var(--ocupat);
+  cursor: pointer;
+}
+.grila-program input:checked + label { background: var(--teren); }
+.grila-program input:focus-visible + label { outline: 3px solid var(--teren); outline-offset: 2px; }
+
+.setari { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.setari .lat { grid-column: 1 / -1; }
+.actiuni, .rand-form { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
+.rand-form label { flex: 1 1 200px; }
+
+.lista-libere { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.lista-libere li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 8px; background: var(--bg); }
+.rezervare .r-persoane { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: var(--teren); color: var(--teren-text); vertical-align: 2px; }
+.rezervare .r-exercitii { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.rezervare .r-exercitii span { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--minge); color: var(--minge-text); }
+
+.r-butoane { display: flex; flex-wrap: wrap; gap: 6px; justify-content: end; }
+@media (max-width: 420px) { .r-butoane { grid-column: 1 / -1; justify-content: start; } }
+
+/* Toate rezervarile */
+.cifre-mici .valoare { font-size: 32px; }
+.cifre-mici .cifra:first-child { background: var(--suprafata); border-color: var(--linie); color: var(--text); }
+.cifre-mici .cifra:first-child .cifra-eticheta { color: var(--text-slab); }
+.filtre { display: flex; flex-wrap: wrap; gap: 12px; }
+.filtre label { flex: 1 1 160px; }
+.filtre .cautare { flex: 3 1 220px; }
+.tabel-scroll { overflow-x: auto; }
+.tabel-rezervari { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.tabel-rezervari th { text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--text-slab); padding: 8px 10px; border-bottom: 1px solid var(--linie); }
+.tabel-rezervari td { padding: 11px 10px; border-bottom: 1px solid var(--linie); white-space: nowrap; }
+.tabel-rezervari td:nth-child(3) { white-space: normal; font-weight: 600; min-width: 120px; }
+.tabel-rezervari tbody tr { cursor: pointer; }
+.tabel-rezervari tbody tr:hover, .tabel-rezervari tbody tr:focus-visible { background: var(--bg); }
+
+.stare { display: inline-block; font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 999px; justify-self: start; }
+.stare.confirmata { background: var(--teren); color: var(--teren-text); }
+.stare.trecuta { background: var(--ocupat); color: var(--text-slab); }
+.stare.anulata { background: var(--rau-fundal); color: var(--rau); }
+
+/* Fereastra cu detaliile unei rezervari */
+dialog#detalii {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  border: 1px solid var(--linie);
+  border-radius: var(--raza);
+  background: var(--suprafata);
+  color: var(--text);
+  padding: 22px;
+}
+dialog#detalii[open] { display: grid; gap: 16px; }
+dialog#detalii::backdrop { background: rgba(8, 20, 34, .55); }
+.detalii-cap { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+.detalii-cap .eticheta { margin-bottom: 4px; }
+.detalii-cap h2 { font-size: 30px; overflow-wrap: anywhere; }
+.detalii-lista { display: grid; grid-template-columns: 140px 1fr; gap: 10px 16px; margin: 0; }
+.detalii-lista dt { color: var(--text-slab); font-size: 14px; }
+.detalii-lista dd { margin: 0; font-weight: 500; overflow-wrap: anywhere; }
+.detalii-lista dd a { color: var(--teren); font-weight: 700; text-decoration: none; font-variant-numeric: tabular-nums; }
+@media (max-width: 460px) { .detalii-lista { grid-template-columns: 1fr; gap: 2px; } .detalii-lista dd { margin-bottom: 8px; } }
+.detalii-istoric { border-top: 1px solid var(--linie); padding-top: 14px; }
+.detalii-istoric .eticheta { margin-bottom: 4px; }
+.detalii-istoric ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 2px; }
+.link-istoric { background: none; border: 0; padding: 4px 0; color: var(--teren); font-size: 14px; text-align: left; font-variant-numeric: tabular-nums; }
+.link-istoric.curent { color: var(--text); font-weight: 700; }

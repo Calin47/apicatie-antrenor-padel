@@ -1,0 +1,256 @@
+/* Teren albastru, linii albe, mingea galbena doar pentru ce e ales. */
+:root {
+  --bg: #eef3f8;
+  --suprafata: #ffffff;
+  --text: #0f2236;
+  --text-slab: #56677a;
+  --linie: #d3dde8;
+  --teren: #1d5fa8;
+  --teren-adanc: #154a85;
+  --teren-text: #ffffff;
+  --minge: #e4f03c;
+  --minge-text: #1b2a05;
+  --ocupat: #e3e9f0;
+  --ocupat-text: #8796a6;
+  --bine: #1f7a4d;
+  --rau: #b3261e;
+  --rau-fundal: #fbe9e7;
+  --font-titlu: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-text: "Figtree", system-ui, -apple-system, sans-serif;
+  --raza: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1622; --suprafata: #13212f; --text: #e6eef6; --text-slab: #9aabbd; --linie: #26394c;
+    --teren: #3d86d6; --teren-adanc: #2d6fb8; --teren-text: #ffffff; --minge: #dbe84a; --minge-text: #1b2a05;
+    --ocupat: #1b2b3b; --ocupat-text: #64788c; --bine: #4cc28a; --rau: #f08a80; --rau-fundal: #3a1c1a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1622; --suprafata: #13212f; --text: #e6eef6; --text-slab: #9aabbd; --linie: #26394c;
+  --teren: #3d86d6; --teren-adanc: #2d6fb8; --teren-text: #ffffff; --minge: #dbe84a; --minge-text: #1b2a05;
+  --ocupat: #1b2b3b; --ocupat-text: #64788c; --bine: #4cc28a; --rau: #f08a80; --rau-fundal: #3a1c1a;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.5 var(--font-text);
+}
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 3px solid var(--teren); outline-offset: 2px; }
+
+/* Banda de sus imita terenul: albastru cu linia de serviciu alba. */
+.banda {
+  background: var(--teren);
+  color: var(--teren-text);
+  position: relative;
+  overflow: hidden;
+}
+.banda::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: 0; bottom: 0;
+  border-left: 3px solid rgba(255, 255, 255, .35);
+}
+.banda::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 14px;
+  border-top: 3px solid rgba(255, 255, 255, .35);
+}
+.banda-interior, .continut {
+  max-width: 760px;
+  margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.banda-interior { padding-block: 28px 36px; position: relative; z-index: 1; }
+.continut { padding-block: 24px 48px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+
+.eticheta {
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--text-slab);
+  margin: 0 0 10px;
+}
+.banda .eticheta { color: rgba(255, 255, 255, .8); }
+h1 {
+  font-family: var(--font-titlu);
+  font-weight: 700;
+  font-size: clamp(34px, 8vw, 52px);
+  line-height: 1;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: .01em;
+  text-wrap: balance;
+}
+h2 {
+  font-family: var(--font-titlu);
+  font-weight: 600;
+  font-size: 24px;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: .02em;
+}
+.subtitlu { margin: 10px 0 0; color: rgba(255, 255, 255, .88); max-width: 52ch; }
+
+.panou {
+  background: var(--suprafata);
+  border: 1px solid var(--linie);
+  border-radius: var(--raza);
+  padding: 20px;
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* Sirul de zile */
+.zile {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scroll-snap-type: x proximity;
+}
+.zi {
+  flex: 0 0 auto;
+  width: 72px;
+  scroll-snap-align: start;
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  padding: 10px 4px;
+  border-radius: var(--raza);
+  border: 1px solid var(--linie);
+  background: var(--suprafata);
+}
+.zi .nume-zi { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--text-slab); }
+.zi .numar-zi { font-family: var(--font-titlu); font-size: 28px; font-weight: 700; line-height: 1.1; }
+.zi .libere { font-size: 12px; color: var(--bine); font-weight: 600; }
+.zi.fara .libere { color: var(--ocupat-text); font-weight: 400; }
+.zi[aria-pressed="true"] { background: var(--teren); border-color: var(--teren); color: var(--teren-text); }
+.zi[aria-pressed="true"] .nume-zi, .zi[aria-pressed="true"] .libere { color: var(--teren-text); }
+
+/* Orele */
+.ore {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 8px;
+}
+.ora {
+  padding: 12px 6px;
+  border-radius: var(--raza);
+  border: 2px solid var(--teren);
+  background: transparent;
+  color: var(--teren);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-size: 17px;
+  display: grid;
+  gap: 0;
+  line-height: 1.2;
+}
+.ora small { font-weight: 500; font-size: 12px; opacity: .85; }
+.ora:hover { background: var(--teren); color: var(--teren-text); }
+.ora[aria-pressed="true"] { background: var(--minge); border-color: var(--minge); color: var(--minge-text); }
+.ora:disabled {
+  border-color: var(--ocupat);
+  background: var(--ocupat);
+  color: var(--ocupat-text);
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.gol { color: var(--text-slab); margin: 0; }
+
+form { display: grid; gap: 14px; }
+label { display: grid; gap: 6px; font-weight: 600; font-size: 14px; }
+label .optional { font-weight: 400; color: var(--text-slab); }
+input, select, textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--linie);
+  background: var(--bg);
+  font-weight: 400;
+}
+textarea { resize: vertical; min-height: 70px; }
+
+.buton {
+  padding: 13px 20px;
+  border-radius: var(--raza);
+  border: 0;
+  background: var(--teren);
+  color: var(--teren-text);
+  font-weight: 700;
+  font-size: 16px;
+}
+.buton:hover { background: var(--teren-adanc); }
+.buton:disabled { opacity: .6; cursor: wait; }
+.buton.secundar { background: transparent; color: var(--teren); border: 1px solid var(--linie); }
+.buton.mic { padding: 7px 12px; font-size: 14px; font-weight: 600; }
+.buton.pericol { background: transparent; color: var(--rau); border: 1px solid var(--linie); }
+
+.rezumat-alegere {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 12px 14px;
+  border-radius: 8px;
+  background: var(--bg);
+}
+.rezumat-alegere strong { font-family: var(--font-titlu); font-size: 22px; text-transform: uppercase; }
+
+.eroare { color: var(--rau); background: var(--rau-fundal); padding: 10px 12px; border-radius: 8px; margin: 0; }
+.confirmare { text-align: left; }
+.confirmare .bifa {
+  width: 48px; height: 48px; border-radius: 50%;
+  background: var(--minge); color: var(--minge-text);
+  display: grid; place-items: center; font-size: 26px; font-weight: 700;
+}
+.nota-mica { font-size: 13px; color: var(--text-slab); margin: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .ora, .zi, .buton { transition: background-color .12s, color .12s, border-color .12s; }
+}
+
+/* Persoane si exercitii */
+fieldset.grup { border: 0; margin: 0; padding: 0; display: grid; gap: 8px; min-width: 0; }
+fieldset.grup legend { font-weight: 600; font-size: 14px; padding: 0; margin-bottom: 8px; }
+fieldset.grup legend .optional { font-weight: 400; color: var(--text-slab); }
+.segmente { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.segmente input, .etichete input { position: absolute; opacity: 0; pointer-events: none; }
+.segmente label {
+  display: grid; justify-items: center; gap: 0;
+  padding: 10px 4px;
+  border: 1px solid var(--linie);
+  border-radius: var(--raza);
+  background: var(--bg);
+  font-family: var(--font-titlu); font-size: 26px; font-weight: 700; line-height: 1.1;
+  cursor: pointer;
+}
+.segmente label small { font-family: var(--font-text); font-size: 12px; font-weight: 500; color: var(--text-slab); }
+.segmente input:checked + label { background: var(--teren); border-color: var(--teren); color: var(--teren-text); }
+.segmente input:checked + label small { color: var(--teren-text); }
+.etichete { display: flex; flex-wrap: wrap; gap: 8px; }
+.etichete label {
+  display: inline-block;
+  padding: 7px 13px;
+  border: 1px solid var(--linie);
+  border-radius: 999px;
+  background: var(--bg);
+  font-size: 14px; font-weight: 500;
+  cursor: pointer;
+}
+.etichete input:checked + label { background: var(--minge); border-color: var(--minge); color: var(--minge-text); font-weight: 600; }
+.segmente input:focus-visible + label, .etichete input:focus-visible + label { outline: 3px solid var(--teren); outline-offset: 2px; }
