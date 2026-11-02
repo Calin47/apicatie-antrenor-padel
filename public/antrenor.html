@@ -47,6 +47,7 @@
 
     <nav class="file" role="tablist" aria-label="Secțiuni">
       <button role="tab" id="tab-rezervari" aria-selected="true" aria-controls="sec-rezervari">Rezervări</button>
+      <button role="tab" id="tab-calendar" aria-selected="false" aria-controls="sec-calendar">Calendar ore</button>
       <button role="tab" id="tab-admin" aria-selected="false" aria-controls="sec-admin">Toate rezervările</button>
       <button role="tab" id="tab-program" aria-selected="false" aria-controls="sec-program">Program</button>
       <button role="tab" id="tab-libere" aria-selected="false" aria-controls="sec-libere">Zile libere</button>
@@ -59,6 +60,25 @@
         <button class="buton secundar mic" id="sapt-inainte" type="button" aria-label="Săptămâna viitoare">→</button>
       </div>
       <div id="lista-sapt" class="lista-sapt"></div>
+    </section>
+
+    <section class="panou" id="sec-calendar" role="tabpanel" aria-labelledby="tab-calendar" hidden>
+      <div class="navigare-sapt">
+        <button class="buton secundar mic" id="cal-inapoi" type="button" aria-label="Săptămâna trecută">←</button>
+        <h2 id="cal-titlu"></h2>
+        <button class="buton secundar mic" id="cal-inainte" type="button" aria-label="Săptămâna viitoare">→</button>
+      </div>
+      <p class="nota-mica">Apasă pe o oră ca s-o faci disponibilă sau indisponibilă. Se salvează pe loc și se vede imediat la clienți. Ce schimbi aici e doar pentru ziua aceea; restul săptămânilor urmează programul din fila Program.</p>
+      <ul class="legenda">
+        <li><span class="mostra disponibil"></span>Disponibil</li>
+        <li><span class="mostra indisponibil"></span>Indisponibil</li>
+        <li><span class="mostra rezervat"></span>Rezervat de un client</li>
+        <li><span class="mostra trecut"></span>A trecut</li>
+      </ul>
+      <div class="grila-scroll">
+        <table class="calendar-ore" id="calendar-ore"></table>
+      </div>
+      <p class="nota-mica" id="cal-stare" aria-live="polite"></p>
     </section>
 
     <section class="panou" id="sec-admin" role="tabpanel" aria-labelledby="tab-admin" hidden>

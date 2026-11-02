@@ -18,6 +18,8 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS setari (cheie TEXT PRIMARY KEY, valoare TEXT NOT NULL);
   CREATE TABLE IF NOT EXISTS program (zi INTEGER NOT NULL, ora TEXT NOT NULL, PRIMARY KEY (zi, ora));
   CREATE TABLE IF NOT EXISTS zile_libere (data TEXT PRIMARY KEY);
+  -- orele puse de antrenor pe o zi anume; inlocuiesc programul saptamanal in ziua aceea
+  CREATE TABLE IF NOT EXISTS program_zi (data TEXT PRIMARY KEY, ore TEXT NOT NULL);
   CREATE TABLE IF NOT EXISTS rezervari (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     data TEXT NOT NULL,
@@ -100,22 +102,27 @@ function seSuprapune(rezervari, data, ora, durata) {
   return rezervari.some((r) => r.data === data && minute(r.ora) < start + durata && start < minute(r.ora) + r.durata);
 }
 
+function programZile() {
+  return Object.fromEntries(db.prepare("SELECT data, ore FROM program_zi").all().map((r) => [r.data, JSON.parse(r.ore)]));
+}
+
 function calendar() {
   const s = setari();
   const azi = acum();
   const ultima = adunaZile(azi.data, s.zileInainte - 1);
   const program = db.prepare("SELECT zi, ora FROM program ORDER BY ora").all();
+  const programZi = programZile();
   const libere = new Set(db.prepare("SELECT data FROM zile_libere").all().map((r) => r.data));
   const rezervari = rezervariActive(azi.data, ultima);
   const zile = [];
   for (let i = 0; i < s.zileInainte; i++) {
     const data = adunaZile(azi.data, i);
     const inchisa = libere.has(data);
-    const sloturi = inchisa ? [] : program
-      .filter((p) => p.zi === ziSaptamana(data))
+    const ore = programZi[data] || program.filter((p) => p.zi === ziSaptamana(data)).map((p) => p.ora);
+    const sloturi = inchisa ? [] : ore
       // nu se mai poate rezerva cu mai putin de o ora inainte
-      .filter((p) => data !== azi.data || minute(p.ora) > azi.minute + 60)
-      .map((p) => ({ ora: p.ora, liber: !seSuprapune(rezervari, data, p.ora, s.durata) }));
+      .filter((ora) => data !== azi.data || minute(ora) > azi.minute + 60)
+      .map((ora) => ({ ora, liber: !seSuprapune(rezervari, data, ora, s.durata) }));
     zile.push({ data, inchisa, sloturi });
   }
   return { antrenor: s.antrenor, anunt: s.anunt, durata: s.durata, exercitii: EXERCITII, zile };
@@ -219,6 +226,7 @@ async function api(req, res, cale) {
       azi,
       setari: setari(),
       program: db.prepare("SELECT zi, ora FROM program ORDER BY zi, ora").all(),
+      programZile: programZile(),
       zileLibere: db.prepare("SELECT data FROM zile_libere WHERE data >= ? ORDER BY data").all(azi).map((r) => r.data),
       rezervari: rezervariActive(adunaZile(azi, -30), adunaZile(azi, 400)),
       // tot istoricul, cu anulatele, pentru sectiunea de administrare
@@ -256,6 +264,18 @@ async function api(req, res, cale) {
     const { data } = await citesteCorp(req);
     if (!RE_DATA.test(String(data))) return trimite(res, 400, { eroare: "Alege o dată din calendar." });
     db.prepare("INSERT OR IGNORE INTO zile_libere VALUES (?)").run(data);
+    return trimite(res, 200, { ok: true });
+  }
+
+  const ziProgram = cale.match(/^\/api\/antrenor\/zile\/(\d{4}-\d{2}-\d{2})$/);
+  if (metoda === "PUT" && ziProgram) {
+    const { ore } = await citesteCorp(req);
+    const valide = [...new Set((Array.isArray(ore) ? ore : []).filter((o) => RE_ORA.test(o)))].sort();
+    db.prepare("INSERT OR REPLACE INTO program_zi VALUES (?, ?)").run(ziProgram[1], JSON.stringify(valide));
+    return trimite(res, 200, { ok: true });
+  }
+  if (metoda === "DELETE" && ziProgram) {
+    db.prepare("DELETE FROM program_zi WHERE data = ?").run(ziProgram[1]);
     return trimite(res, 200, { ok: true });
   }
 

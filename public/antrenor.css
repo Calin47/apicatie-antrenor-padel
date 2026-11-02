@@ -148,3 +148,37 @@ dialog#detalii::backdrop { background: rgba(8, 20, 34, .55); }
 .detalii-istoric ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 2px; }
 .link-istoric { background: none; border: 0; padding: 4px 0; color: var(--teren); font-size: 14px; text-align: left; font-variant-numeric: tabular-nums; }
 .link-istoric.curent { color: var(--text); font-weight: 700; }
+
+/* Calendar ore: verde disponibil, rosu indisponibil */
+.legenda { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 14px; }
+.legenda li { display: flex; align-items: center; gap: 6px; }
+.mostra { width: 16px; height: 16px; border-radius: 4px; display: inline-block; }
+.calendar-ore { border-collapse: separate; border-spacing: 3px; font-variant-numeric: tabular-nums; width: 100%; min-width: 420px; table-layout: fixed; }
+.calendar-ore thead th:first-child { width: 48px; }
+.calendar-ore thead th { font-size: 12px; font-weight: 600; color: var(--text-slab); padding: 4px 2px; vertical-align: bottom; }
+.calendar-ore thead th span, .calendar-ore thead th strong { display: block; }
+.calendar-ore thead th strong { font-family: var(--font-titlu); font-size: 22px; color: var(--text); line-height: 1.1; }
+.calendar-ore thead th.azi strong, .calendar-ore thead th.azi span { color: var(--teren); }
+.calendar-ore tbody th { font-size: 12px; font-weight: 600; color: var(--text-slab); text-align: right; padding-right: 6px; white-space: nowrap; }
+.calendar-ore td { padding: 0; }
+.reset-zi { display: block; margin: 4px auto 0; background: none; border: 0; padding: 0; font-size: 11px; line-height: 1.2; color: var(--teren); font-weight: 600; }
+.celula {
+  display: block;
+  width: 100%;
+  height: 30px;
+  border-radius: 6px;
+  border: 0;
+  font-size: 11px;
+  font-weight: 700;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0 4px;
+}
+.celula.disponibil, .mostra.disponibil { background: var(--verde); color: var(--verde-text); }
+.celula.indisponibil, .mostra.indisponibil { background: var(--rosu); color: var(--rosu-text); }
+.celula.rezervat, .mostra.rezervat { background: var(--teren); color: var(--teren-text); }
+.celula.trecut, .mostra.trecut { background: var(--ocupat); cursor: default; }
+.celula.disponibil:hover { filter: brightness(1.08); }
+.celula.indisponibil:hover { outline: 2px solid var(--verde); outline-offset: -2px; }
+.zi-libera .celula.indisponibil { opacity: .55; }

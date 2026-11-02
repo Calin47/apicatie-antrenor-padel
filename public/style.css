@@ -15,6 +15,10 @@
   --bine: #1f7a4d;
   --rau: #b3261e;
   --rau-fundal: #fbe9e7;
+  --verde: #2f9e5f;
+  --verde-text: #ffffff;
+  --rosu: #f0a39b;
+  --rosu-text: #8f1d16;
   --font-titlu: "Barlow Condensed", "Arial Narrow", sans-serif;
   --font-text: "Figtree", system-ui, -apple-system, sans-serif;
   --raza: 10px;
@@ -23,14 +27,14 @@
   :root:not([data-theme="light"]) {
     --bg: #0b1622; --suprafata: #13212f; --text: #e6eef6; --text-slab: #9aabbd; --linie: #26394c;
     --teren: #3d86d6; --teren-adanc: #2d6fb8; --teren-text: #ffffff; --minge: #dbe84a; --minge-text: #1b2a05;
-    --ocupat: #1b2b3b; --ocupat-text: #64788c; --bine: #4cc28a; --rau: #f08a80; --rau-fundal: #3a1c1a;
+    --ocupat: #1b2b3b; --ocupat-text: #64788c; --bine: #4cc28a; --rau: #f08a80; --rau-fundal: #3a1c1a; --verde: #2f9e5f; --verde-text: #ffffff; --rosu: #5a2420; --rosu-text: #ffb4ab;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #0b1622; --suprafata: #13212f; --text: #e6eef6; --text-slab: #9aabbd; --linie: #26394c;
   --teren: #3d86d6; --teren-adanc: #2d6fb8; --teren-text: #ffffff; --minge: #dbe84a; --minge-text: #1b2a05;
-  --ocupat: #1b2b3b; --ocupat-text: #64788c; --bine: #4cc28a; --rau: #f08a80; --rau-fundal: #3a1c1a;
+  --ocupat: #1b2b3b; --ocupat-text: #64788c; --bine: #4cc28a; --rau: #f08a80; --rau-fundal: #3a1c1a; --verde: #2f9e5f; --verde-text: #ffffff; --rosu: #5a2420; --rosu-text: #ffb4ab;
   color-scheme: dark;
 }
 

@@ -49,6 +49,7 @@ async function incarca() {
   deseneazaSaptamana();
   deseneazaLibere();
   deseneazaAdmin();
+  deseneazaCalendar();
   if ($("detalii").open) deschideDetalii(Number($("detalii").dataset.id));
 }
 
@@ -252,7 +253,7 @@ $("iesire").addEventListener("click", async () => {
   arataLogin();
 });
 
-for (const [tab, sectiune] of [["tab-rezervari", "sec-rezervari"], ["tab-admin", "sec-admin"], ["tab-program", "sec-program"], ["tab-libere", "sec-libere"]]) {
+for (const [tab, sectiune] of [["tab-rezervari", "sec-rezervari"], ["tab-calendar", "sec-calendar"], ["tab-admin", "sec-admin"], ["tab-program", "sec-program"], ["tab-libere", "sec-libere"]]) {
   $(tab).addEventListener("click", () => {
     for (const t of document.querySelectorAll('[role="tab"]')) t.setAttribute("aria-selected", String(t.id === tab));
     for (const s of document.querySelectorAll('[role="tabpanel"]')) s.hidden = s.id !== sectiune;
@@ -479,3 +480,114 @@ $("d-inchide").addEventListener("click", () => $("detalii").close());
 $("detalii").addEventListener("click", (e) => { if (e.target === $("detalii")) $("detalii").close(); });
 $("filtru").addEventListener("change", deseneazaAdmin);
 $("cauta").addEventListener("input", deseneazaAdmin);
+
+// ---------- calendar cu ore: verde disponibil, rosu indisponibil, pe fiecare zi ----------
+
+let luniCalendar = null;
+
+// orele in care se poate incepe un antrenament in ziua data: ce a pus antrenorul pe ziua aceea, altfel programul saptamanal
+const oreZi = (data) => date.programZile[data] || date.program.filter((p) => p.zi === ziSapt(data)).map((p) => p.ora);
+const minuteOra = (ora) => Number(ora.slice(0, 2)) * 60 + Number(ora.slice(3));
+
+function rezervareLa(data, ora) {
+  const m = minuteOra(ora);
+  return date.rezervari.find((r) => r.data === data && minuteOra(r.ora) <= m && m < minuteOra(r.ora) + r.durata);
+}
+
+function deseneazaCalendar() {
+  if (!luniCalendar) luniCalendar = aduna(date.azi, -ziSapt(date.azi));
+  const zile = [...Array(7)].map((_, i) => aduna(luniCalendar, i));
+  let disponibile = 0;
+  const tabel = $("calendar-ore");
+  tabel.replaceChildren();
+
+  const cap = document.createElement("tr");
+  cap.append(document.createElement("th"));
+  for (const data of zile) {
+    const th = document.createElement("th");
+    th.scope = "col";
+    if (data === date.azi) th.className = "azi";
+    const nume = document.createElement("span");
+    nume.textContent = ZILE_SCURT[ziSapt(data)];
+    const nr = document.createElement("strong");
+    nr.textContent = String(Number(data.slice(8)));
+    th.append(nume, nr);
+    if (date.programZile[data] && data >= date.azi) {
+      const reset = document.createElement("button");
+      reset.type = "button";
+      reset.className = "reset-zi";
+      reset.textContent = "↺ revino";
+      reset.title = "Revino la programul săptămânal în ziua asta";
+      reset.addEventListener("click", () => salveazaZi(data, null));
+      th.append(reset);
+    }
+    cap.append(th);
+  }
+  const thead = document.createElement("thead");
+  thead.append(cap);
+
+  const tbody = document.createElement("tbody");
+  const acumMinute = new Date().getHours() * 60 + new Date().getMinutes();
+  for (const ora of ORE) {
+    const tr = document.createElement("tr");
+    const th = document.createElement("th");
+    th.scope = "row";
+    th.textContent = ora;
+    tr.append(th);
+    for (const data of zile) {
+      const td = document.createElement("td");
+      const b = document.createElement("button");
+      b.type = "button";
+      const libera = date.zileLibere.includes(data);
+      const rez = rezervareLa(data, ora);
+      const trecut = data < date.azi || (data === date.azi && minuteOra(ora) <= acumMinute);
+      const disponibil = !libera && oreZi(data).includes(ora);
+      const eticheta = `${ZILE_LUNG[ziSapt(data)]} ${Number(data.slice(8))}, ${ora}`;
+      if (rez) {
+        b.className = "celula rezervat";
+        b.textContent = rez.ora === ora ? rez.nume.split(" ")[0] : "";
+        b.setAttribute("aria-label", `${eticheta}: rezervat de ${rez.nume}`);
+        b.addEventListener("click", () => deschideDetalii(rez.id));
+      } else if (trecut) {
+        b.className = "celula trecut";
+        b.disabled = true;
+        b.setAttribute("aria-label", `${eticheta}: a trecut`);
+      } else {
+        b.className = "celula " + (disponibil ? "disponibil" : "indisponibil");
+        b.setAttribute("aria-label", `${eticheta}: ${disponibil ? "disponibil" : "indisponibil"}`);
+        b.setAttribute("aria-pressed", String(disponibil));
+        if (disponibil) disponibile++;
+        b.addEventListener("click", () => {
+          if (libera) {
+            $("cal-stare").textContent = "Ziua e trecută la Zile libere. Redeschide-o de acolo ca să pui ore.";
+            return;
+          }
+          const ore = new Set(oreZi(data));
+          if (disponibil) ore.delete(ora); else ore.add(ora);
+          salveazaZi(data, [...ore].sort());
+        });
+      }
+      if (libera) td.className = "zi-libera";
+      td.append(b);
+      tr.append(td);
+    }
+    tbody.append(tr);
+  }
+  tabel.append(thead, tbody);
+  $("cal-titlu").textContent = `${scurt(zile[0])} – ${scurt(zile[6])} · ${disponibile} ore libere`;
+}
+
+async function salveazaZi(data, ore) {
+  $("cal-stare").textContent = "Se salvează…";
+  try {
+    if (ore) await cerere(`/api/antrenor/zile/${data}`, { method: "PUT", body: JSON.stringify({ ore }) });
+    else await cerere(`/api/antrenor/zile/${data}`, { method: "DELETE" });
+    await incarca();
+    $("cal-stare").textContent = `Salvat pentru ${dataLunga(data).toLowerCase()}.`;
+  } catch (err) {
+    $("cal-stare").textContent = err.message;
+  }
+}
+
+$("cal-inapoi").addEventListener("click", () => { luniCalendar = aduna(luniCalendar, -7); deseneazaCalendar(); });
+$("cal-inainte").addEventListener("click", () => { luniCalendar = aduna(luniCalendar, 7); deseneazaCalendar(); });

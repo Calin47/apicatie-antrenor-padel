@@ -17,6 +17,7 @@ Nu are dependinte: foloseste `node:http` si `node:sqlite` (Node 22.13+). Datele 
 
 - **Clientul** vede urmatoarele 14 zile (se schimba din panou), orele libere si ocupate, alege una si lasa nume, telefon, cate persoane vin (1-4), ce vrea sa exerseze (serviciu, bandeja, víbora, smash etc., lista e `EXERCITII` din `server.mjs`) si un mesaj optional. Nu se poate rezerva cu mai putin de o ora inainte.
 - **Antrenorul** vede cate antrenamente are azi, maine, saptamana asta si luna asta, rezervarile pe saptamani (cu telefonul clientului, numarul de persoane si ce vrea sa exerseze), le poate anula, isi bifeaza programul saptamanal (07:00-22:30, din 30 in 30 de minute), durata antrenamentului si zilele libere.
+- **Calendar ore** (fila din panou): saptamana pe ore, verde = disponibil, rosu = indisponibil, albastru = rezervat. Un clic pe o ora o comuta si se salveaza pe loc, doar pentru ziua aceea (tabela `program_zi`, care inlocuieste programul saptamanal in ziua respectiva). "↺ revino" readuce ziua la programul saptamanal.
 - **Toate rezervarile** (fila din panou): tot istoricul, cu cautare dupa nume sau telefon si filtru viitoare/trecute/anulate. Un clic pe o rezervare deschide detaliile: zi, ora, persoane, telefon, exercitii, mesaj, cand a fost facuta sau anulata si istoricul clientului (recunoscut dupa numarul de telefon).
 - Doua rezervari care se suprapun nu sunt posibile; serverul verifica la fiecare rezervare.
 - Toate orele sunt in ora Romaniei (`Europe/Bucharest`).
